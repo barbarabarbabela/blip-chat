@@ -1,40 +1,33 @@
-import { ClientBuilder } from "blip-sdk/dist/blip-sdk";
 import { FastifyInstance } from "fastify";
-import WebSocketTransport from "lime-transport-websocket";
 import { createApiKeySchema } from "../schemas/api-key.schema";
+import { blipConnection } from "../utils/blip-connection";
+import jwt from "jsonwebtoken";
+import { authMiddleware } from "../utils/auth-middleware";
 
-let validApiKey: string | null = null;
-let validIdentifier: string | null = null;
+const JWT_SECRET = "your-secret-key";
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/login", async (request, reply) => {
     const { body } = createApiKeySchema.parse(request);
 
-    console.log(body);
-
     try {
-      const client = new ClientBuilder()
-        .withIdentifier(body.identifier)
-        .withAccessKey(body.accessKey)
-        .withTransportFactory(() => new WebSocketTransport())
-        .build();
+      await blipConnection(body.identifier, body.accessKey);
 
-      console.log("client", client);
+      const token = jwt.sign(
+        {
+          identifier: body.identifier,
+          accessKey: body.accessKey,
+        },
+        JWT_SECRET,
+        { expiresIn: "1h" }
+      );
 
-      await client
-        .connect()
-        .then(function (session) {
-          console.log("session", session);
-          console.log("Application started. Press Ctrl + c to stop.");
+      reply
+        .setCookie("authToken", token, {
+          httpOnly: true,
+          maxAge: 3600,
         })
-        .catch(function (err) {
-          console.log(err.message);
-        });
-
-      validApiKey = body.accessKey;
-      validIdentifier = body.identifier;
-
-      return reply.redirect("/");
+        .redirect("/");
     } catch (err) {
       return reply.status(401).send({
         message: "Autenticação falhou no Blip. Verifique suas credenciais.",
@@ -42,13 +35,7 @@ export async function routes(fastify: FastifyInstance) {
     }
   });
 
-  fastify.get("/", async (request, reply) => {
-    if (!validApiKey || !validIdentifier) {
-      return reply.status(401).send({ message: "Usuário não autenticado." });
-    }
-
-    return reply
-      .status(200)
-      .send({ message: "Usuário autenticado com sucesso!" });
+  fastify.get("/", { preHandler: authMiddleware }, async (request, reply) => {
+    return reply.send({ message: "Acesso permitido à rota!" });
   });
 }
