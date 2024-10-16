@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 import { routes } from "./routes/routes";
-import { client } from "./utils/blip-connection";
+import fastifyCookie from "@fastify/cookie";
 
 const app = fastify();
 
@@ -9,12 +9,9 @@ app.register(fastifyCors, {
   origin: "*",
 });
 
-app.register(routes);
+app.register(fastifyCookie);
 
-client.addMessageReceiver("text/plain", function (message) {
-  // TODO: Proccess the received message
-  console.log(message);
-});
+app.register(routes);
 
 app
   .listen({
