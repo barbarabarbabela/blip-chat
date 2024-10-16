@@ -1,8 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
 import { blipConnection } from "../utils/blip-connection";
-
-const JWT_SECRET = "your-secret-key";
+import { env } from "../env";
 
 export async function authMiddleware(
   request: FastifyRequest,
@@ -15,7 +14,7 @@ export async function authMiddleware(
       return reply.status(401).send({ message: "Token não fornecido." });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const decoded = jwt.verify(token, env.JWT_SECRET) as {
       identifier: string;
       accessKey: string;
     };

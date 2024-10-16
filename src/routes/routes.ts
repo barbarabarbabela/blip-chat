@@ -3,8 +3,9 @@ import { createApiKeySchema } from "../schemas/api-key.schema";
 import { blipConnection } from "../utils/blip-connection";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from "../utils/auth-middleware";
+import { env } from "../env";
 
-const JWT_SECRET = "your-secret-key";
+const JWT_SECRET = env.JWT_SECRET;
 
 export async function routes(fastify: FastifyInstance) {
   fastify.post("/login", async (request, reply) => {
