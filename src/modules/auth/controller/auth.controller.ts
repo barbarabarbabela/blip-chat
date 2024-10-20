@@ -7,8 +7,6 @@ const login = async (request: FastifyRequest, reply: FastifyReply) => {
 
   const { apiKey } = parsedBody;
 
-  const token = reply.server.jwt.sign({ apiKey });
-
   await authService.login(apiKey);
 
   reply.status(200).send({ message: "Login realizado com sucesso!" });
