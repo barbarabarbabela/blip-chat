@@ -3,7 +3,7 @@ import { z } from "zod";
 const id = (data: unknown) =>
   z
     .object({
-      contactId: z.string(),
+      id: z.string(),
     })
     .parse(data);
 

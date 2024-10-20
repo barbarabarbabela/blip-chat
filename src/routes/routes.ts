@@ -6,5 +6,5 @@ export async function routes(fastify: FastifyInstance) {
   fastify.post("/login", authController.login);
   fastify.get("/", contactsController.getContacts);
   fastify.get("/messages", contactsController.getMessages);
-  fastify.get("/contato/:contactId", contactsController.getContactMessages);
+  fastify.get("/contato/:id", contactsController.getContactMessages);
 }
