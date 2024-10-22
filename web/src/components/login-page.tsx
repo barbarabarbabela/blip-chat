@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { login } from "../http/login";
+import { login } from "../http/get-login";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
