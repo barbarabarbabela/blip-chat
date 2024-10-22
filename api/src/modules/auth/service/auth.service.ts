@@ -9,13 +9,20 @@ const takeBlip: {
 } = {};
 
 const login = async (apiKey: string) => {
-  takeBlip[apiKey] = new ClientBuilder()
-    .withIdentifier(IDENTIFIER)
-    .withAccessKey(apiKey)
-    .withTransportFactory(() => new WebSocketTransport())
-    .build();
+  let session;
+  try {
+    session = takeBlip[apiKey] = new ClientBuilder()
+      .withIdentifier(IDENTIFIER)
+      .withAccessKey(apiKey)
+      .withTransportFactory(() => new WebSocketTransport())
+      .build();
 
-  await takeBlip[apiKey].connect();
+    await takeBlip[apiKey].connect();
+  } catch (error) {
+    session.close();
+
+    throw new Error("Login failed");
+  }
 };
 
 const getClient = (apiKey: string) => {
