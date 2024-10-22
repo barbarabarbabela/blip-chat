@@ -2,11 +2,7 @@ import authService from "../../auth/service/auth.service";
 import Lime from "lime-js";
 
 const getContacts = async (apiKey: string) => {
-  console.log(apiKey);
-
   const client = authService.getClient(apiKey);
-
-  console.log(client);
 
   const takeBlipResponse = await client.sendCommand({
     id: Lime.Guid(),
@@ -14,7 +10,10 @@ const getContacts = async (apiKey: string) => {
     uri: "/contacts",
   });
 
+  console.log("takeBlipResponse", takeBlipResponse);
+
   const { resource } = takeBlipResponse;
+
   const { items: contactList } = resource;
 
   if (!contactList.length) {
@@ -48,18 +47,24 @@ const getContactMessages = async (apiKey: string, contactId: string) => {
 
   const takeBlipResponse = await client.sendCommand({
     id: Lime.Guid(),
-    uri: `/messages/${contactId}`,
     method: "get",
+    uri: "/messages",
   });
 
   const { resource } = takeBlipResponse;
   const { items: messages } = resource;
 
   if (!messages.length) {
-    throw new Error("No messages found");
+    throw new Error("No contacts found");
   }
 
-  return messages;
+  const filteredMessages = messages.filter((message) => {
+    const from = message.from.split("/")[0];
+
+    return from === contactId;
+  });
+
+  return filteredMessages;
 };
 
 export default {

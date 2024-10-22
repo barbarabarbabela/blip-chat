@@ -24,8 +24,6 @@ const getMessages = async (request: FastifyRequest, reply: FastifyReply) => {
 
   const messages = await contactsService.getMessages(apiKey);
 
-  console.log(messages);
-
   reply.status(200).send({ messages });
 };
 
