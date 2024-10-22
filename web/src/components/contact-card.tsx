@@ -1,19 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 interface ContactCardProps {
   name: string;
   onClickDetails: () => void;
+  handleHistoryClick: () => void
 }
 
-function ContactCard({ name, onClickDetails }: ContactCardProps) {
-  const navigate = useNavigate();
-
-
-
-  const handleHistoryClick = () => {
-    navigate(`/contato`); 
-  };
+function ContactCard({ name, onClickDetails, handleHistoryClick }: ContactCardProps) {
 
   return (
     <div className="bg-white border shadow-lg rounded-lg p-6 w-fit m-6">

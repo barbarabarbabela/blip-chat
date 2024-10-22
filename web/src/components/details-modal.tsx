@@ -1,4 +1,6 @@
 import React from "react";
+import { useContactsContext } from "../contexts/contacts-context";
+import { useContactsQuery } from "../hooks/use-contacts";
 
 interface DetailCardProps {
   contact: {

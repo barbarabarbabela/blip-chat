@@ -4,6 +4,7 @@ import ContactCard from "./contact-card";
 import { useContactsContext } from "../contexts/contacts-context";
 import DetailsModal from "./details-modal";
 import { Contact } from "../interfaces/contacts";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const { contacts } = useContactsContext();
@@ -12,6 +13,8 @@ function HomePage() {
   const [selectedContact, setSelectedContact] = React.useState<Contact | null>(
     null
   );
+  const navigate = useNavigate();
+
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -31,7 +34,9 @@ function HomePage() {
     setIsDetailModalOpen(true);
   };
 
-  console.log(selectedContact)
+  const handleHistoryClick = (contact: Contact) => {
+    navigate('/contato/', { state: { selectedContact: contact } });
+  };
 
   return (
     <div>
@@ -42,6 +47,7 @@ function HomePage() {
             key={contact.identity}
             name={contact.name}
             onClickDetails={() => handleContactClick(contact)}
+            handleHistoryClick={() => handleHistoryClick(contact)}
           />
         ))}
       </div>

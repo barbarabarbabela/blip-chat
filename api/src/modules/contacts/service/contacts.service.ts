@@ -10,8 +10,6 @@ const getContacts = async (apiKey: string) => {
     uri: "/contacts",
   });
 
-  console.log("takeBlipResponse", takeBlipResponse);
-
   const { resource } = takeBlipResponse;
 
   const { items: contactList } = resource;
@@ -59,7 +57,7 @@ const getContactMessages = async (apiKey: string, contactId: string) => {
   }
 
   const filteredMessages = messages.filter((message) => {
-    const from = message.from.split("/")[0];
+    const from = message.from.split("@")[0];
 
     return from === contactId;
   });
