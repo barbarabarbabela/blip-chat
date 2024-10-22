@@ -1,52 +1,40 @@
 import React from "react";
-import DetailsModal from "./details-modal";
 import { useNavigate } from "react-router-dom";
 
-function ContactCard() {
-  const [isDetailModalOpen, setIsDetailModalOpen] = React.useState(false);
+interface ContactCardProps {
+  name: string;
+  onClickDetails: () => void;
+}
+
+function ContactCard({ name, onClickDetails }: ContactCardProps) {
   const navigate = useNavigate();
 
-  const handleDetailModal = () => {
-    setIsDetailModalOpen(!isDetailModalOpen);
-  };
+
 
   const handleHistoryClick = () => {
-    navigate(`/contato`);
+    navigate(`/contato`); 
   };
 
   return (
-    <div className="bg-white border shadow-lg rounded-lg p-6 max-w-sm m-6">
+    <div className="bg-white border shadow-lg rounded-lg p-6 w-fit m-6">
       <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-        Contact name
+        {name}
       </h1>
-      <div className="flex justify-between">
+      <div className="flex gap-10">
         <p
           className="text-gray-600 mb-2 hover:underline hover:cursor-pointer"
-          onClick={handleDetailModal}
+          onClick={onClickDetails}
         >
           Detalhes
         </p>
-  <p
+        <p
           className="text-gray-600 hover:underline hover:cursor-pointer"
           onClick={handleHistoryClick}
         >
           Histórico de mensagens
         </p>
-        {isDetailModalOpen && (
-          <DetailsModal
-            isOpen={isDetailModalOpen}
-            title={"Detalhes do contato"}
-            onClose={handleDetailModal}
-          >
-            Email: etc@etc.com <br />
-            Grupo: grupo
-            <br />
-            Última mensagem: xx/xx/xxxx
-            <br />
-            Cidade: São Paulo
-          </DetailsModal>
-        )}
       </div>
+
     </div>
   );
 }
