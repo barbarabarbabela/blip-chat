@@ -1,7 +1,28 @@
 import React from "react";
 
-function DetailsModal({ isOpen, onClose, title, children }) {
-  if (!isOpen) return null; 
+interface DetailCardProps {
+  contact: {
+    name?: string;
+    email?: string;
+    group?: string;
+    city?: string;
+    lastMessage?: string;
+  };
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+}
+
+function DetailsModal({ isOpen, onClose, title, contact }: DetailCardProps) {
+  if (!isOpen || !contact) return null;
+
+  const {
+    name = "Não informado",
+    email = "Não informado",
+    group = "Não informado",
+    city = "Não informado",
+    lastMessage = "Não informado",
+  } = contact;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -16,9 +37,18 @@ function DetailsModal({ isOpen, onClose, title, children }) {
           </button>
         </div>
 
-        <div className="p-4">{children}</div>
+        <div className="p-4">
+          <div>
+            <p>Nome: {name}</p>
 
-        <div className="flex justify-end p-4 ">
+            <p>Email: {email}</p>
+            <p>Grupo: {group}</p>
+            <p>Última mensagem: {lastMessage}</p>
+            <p>Cidade: {city}</p>
+          </div>
+        </div>
+
+        <div className="flex justify-end p-4">
           <button
             onClick={onClose}
             className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2"
